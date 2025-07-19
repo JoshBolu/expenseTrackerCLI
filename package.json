@@ -1,0 +1,14 @@
+{
+  "name": "expensetrackercli",
+  "version": "1.0.0",
+  "description": "building expense tracker app",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dev0xJosh",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^14.0.0"
+  }
+}
