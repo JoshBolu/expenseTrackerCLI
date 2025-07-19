@@ -1,4 +1,4 @@
-const { readFileSync, writeFileSync } = require("fs");
+const { readFileSync, writeFileSync, existsSync } = require("fs");
 
 function addExpense(
   description,
@@ -29,64 +29,6 @@ function getAllExpenses(expenseDataPath) {
   }
 }
 
-// function listAllExpense(allExpenseData) {
-//   try {
-//     if (allExpenseData.length === 0) {
-//       console.log("No expenses found.");
-//       return;
-//     } else {
-//       // Define headers
-//       const headers = [
-//         "ID",
-//         "Description",
-//         "Category",
-//         "Amount",
-//         "Date Created",
-//         "Date Updated",
-//       ];
-
-//       // Calculate maximum width for each column
-//       const widths = headers.map((header, index) => {
-//         const columnValues = allExpenseData.map((row, key) => {
-//           if (index === 0) return row.id.toString();
-//           if (index === 1) return row.description;
-//           if (index === 2) return row.category;
-//           if (index === 3) return row.amount;
-//           if (index === 4) return row.dateCreated;
-//           if (index === 5) return row.dateUpdated;
-//         });
-//         return Math.max(
-//           header.length,
-//           ...columnValues.map((val) => val.length)
-//         );
-//       });
-//       // Create header row
-//       const headerRow = headers
-//         .map((header, index) => header.padEnd(widths[index]))
-//         .join("  ");
-//       // Create separator row
-//       const separatorRow = widths.map((width) => "-".repeat(width)).join("  ");
-//       // Create data rows
-//       const dataRows = allExpenseData.map((row) => {
-//         return [
-//           row.id.toString().padEnd(widths[0]),
-//           row.description.padEnd(widths[1]),
-//           row.category.padEnd(widths[2]),
-//           row.amount.padEnd(widths[3]),
-//           row.dateCreated.padEnd(widths[4]),
-//           row.dateUpdated.padEnd(widths[5]),
-//         ].join("  ");
-//       });
-
-//       // Print the table
-//       console.log(headerRow);
-//       console.log(separatorRow);
-//       console.log(dataRows.join("\n"));
-//     }
-//   } catch (error) {
-//     console.error("Error listing all expenses:", error);
-//   }
-// }
 function listAllExpense(allExpenseData) {
   try {
     if (allExpenseData.length === 0) {
@@ -142,20 +84,57 @@ function listAllExpense(allExpenseData) {
   }
 }
 
+function viewSummary(allExpenseData) {
+  try {
+    const summary = allExpenseData.reduce((expenseTotal, data) => {
+      expenseTotal += Number(data.amount);
+      return expenseTotal;
+    }, 0);
+    console.log(`Total Expense:  ₦${summary.toFixed(2)}`);
+  } catch (error) {
+    console.error("Error calculating summary:", error);
+  }
+}
+
+function deleteExpense(itemId, allExpenseData, expenseDataPath) {
+  try {
+    const newExpenseData = allExpenseData.filter((data) => {
+      return data.id !== Number(itemId);
+    })    
+    writeFileSync(expenseDataPath, JSON.stringify(newExpenseData));
+    console.log(`Expense with ID ${itemId} has been deleted.`);
+  } catch (error) {
+    console.error("Error deleting expense:", error);
+  }
+}
+
+function viewSummaryByMonth(summaryByMonth, allExpenseData) {
+  try {
+    const filteredMonthlySummary = allExpenseData.filter((data) => {
+      // because .getMonth() starts from 0 we'll minus it by one before comparing
+      return (
+        new Date(data.dateCreated).getMonth() === Number(summaryByMonth) - 1
+      );
+    });
+
+    const reducedMonthlySummary = filteredMonthlySummary.reduce(
+      (monthlySum, monthlyData) => {
+        monthlySum += Number(monthlyData.amount)
+        return monthlySum;
+      },
+      0
+    );
+    const monthName = new Date(0, Number(summaryByMonth)-1).toLocaleString("en-US", { month: "long" });
+    console.log(`Total Expenses for ${monthName}: ${reducedMonthlySummary}`);
+  } catch (error) {
+    console.log("Error viewing summary by month:", error);
+  }
+}
+
+// Implement this extra functions to the project to make it better
 function updateExpense() {
-  
 }
 
-function deleteExpense() {
-  console.log("delete Expense");
-}
-function viewSummary() {
-  console.log("view Summary");
-}
-
-function viewSummaryByMonth() {
-  console.log("view Summary by month");
-}
 
 function setBudgetForMonth() {
   console.log("set budget for month");

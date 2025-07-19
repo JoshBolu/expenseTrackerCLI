@@ -1,6 +1,6 @@
 const { program } = require("commander");
 const path = require("path");
-const { addExpense, getAllExpenses, listAllExpense } = require('./util/functionFIle.js')
+const { addExpense, getAllExpenses, listAllExpense, viewSummary, updateExpense, deleteExpense, viewSummaryByMonth,setBudgetForMonth, budgetExceeded, } = require('./util/functionFIle.js')
 
 
 // Always put space between the flag and the placeholder<>
@@ -10,12 +10,16 @@ program
   .option("-d, --description <descr>", "What you want to purchase")
   .option("-c, --category <cate>", "Group all your purchase under category")
   .option("-a,--amount <number>", "Price spent on the purchase")
+  .option("-i, --id <id>", "Id of the item you want to select")
+  .option("-m, --summaryByMonth <month>", "View summary by month")
   .parse();
 
 const options = program.opts(); // to get the options (e.g. --limit)
 let description = options.description 
 let category = options.category
 let amount = options.amount
+let itemId = options.id;
+let summaryByMonth = options.summaryByMonth;
 const action = program.args[0]; // to get the first argument
 
 // define the path using the fs module so it would be relative to the ,achine
@@ -34,6 +38,15 @@ switch(action){
         break;
     case "list":
         listAllExpense(allExpenseData);
+        break;
+    case "summary":
+        viewSummary(allExpenseData);
+        break;
+    case "delete":
+        deleteExpense(itemId, allExpenseData, expenseDataPath);
+        break;
+    case "summaryByMonth":
+        viewSummaryByMonth(summaryByMonth, allExpenseData);
         break;
     default:
         console.log(`The action ${action} is not avaiable please read the READme file`);
