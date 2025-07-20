@@ -1,6 +1,6 @@
 const { program } = require("commander");
 const path = require("path");
-const { addExpense, getAllExpenses, listAllExpense, viewSummary, updateExpense, deleteExpense, viewSummaryByMonth,setBudgetForMonth, budgetExceeded, } = require('./util/functionFIle.js')
+const { addExpense, getAllExpenses, listAllExpense, viewSummary, updateExpense, deleteExpense, viewSummaryByMonth,setBudgetForMonth, checkBudgetPerMonth, budgetExceeded, } = require('./util/functionFIle.js')
 
 
 // Always put space between the flag and the placeholder<>
@@ -12,6 +12,7 @@ program
   .option("-a,--amount <number>", "Price spent on the purchase")
   .option("-i, --id <id>", "Id of the item you want to select")
   .option("-m, --summaryByMonth <month>", "View summary by month")
+  .option("-s, --setBudgetForMonth <budget>", "Set budget for the month")
   .parse();
 
 const options = program.opts(); // to get the options (e.g. --limit)
@@ -20,15 +21,20 @@ let category = options.category
 let amount = options.amount
 let itemId = options.id;
 let summaryByMonth = options.summaryByMonth;
+let budgetForMonth = options.setBudgetForMonth;
 const action = program.args[0]; // to get the first argument
 
 // define the path using the fs module so it would be relative to the ,achine
-const expenseDataPath = path.join(__dirname, "expenseData.json");
+const expenseDataPath = path.join(__dirname, "data" , "expenseData.json");
+const budgetPath = path.join(__dirname, "data", "budget.json");
 
 // define data as an empty array on initialization so we know it's empty
 let allExpenseData = []
 allExpenseData = getAllExpenses(expenseDataPath);
-// console.log(allExpenseData)
+// console.log(budgetForMonth)
+
+// call for budget checker
+checkBudgetPerMonth(budgetPath)
 
 
 // we'll use switch statements for the logic of the project
@@ -48,6 +54,16 @@ switch(action){
     case "summaryByMonth":
         viewSummaryByMonth(summaryByMonth, allExpenseData);
         break;
+    case "update":
+        updateExpense(itemId, allExpenseData, expenseDataPath, description, category, amount);
+        break;
+    case "setBudgetForMonth":
+        setBudgetForMonth(budgetForMonth, budgetPath);
+        break;
     default:
         console.log(`The action ${action} is not avaiable please read the READme file`);
 }
+
+
+// call for budget checker
+checkBudgetPerMonth(budgetPath)

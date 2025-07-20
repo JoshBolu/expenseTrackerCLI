@@ -110,38 +110,92 @@ function deleteExpense(itemId, allExpenseData, expenseDataPath) {
 
 function viewSummaryByMonth(summaryByMonth, allExpenseData) {
   try {
-    const filteredMonthlySummary = allExpenseData.filter((data) => {
+    // use chaining as we want to perform double array manipulation technique
+    const filteredMonthlySummary = allExpenseData
+    .filter((data) => {
       // because .getMonth() starts from 0 we'll minus it by one before comparing
       return (
         new Date(data.dateCreated).getMonth() === Number(summaryByMonth) - 1
       );
-    });
-
-    const reducedMonthlySummary = filteredMonthlySummary.reduce(
+    })
+    .reduce(
       (monthlySum, monthlyData) => {
         monthlySum += Number(monthlyData.amount)
         return monthlySum;
       },
       0
-    );
+    ).toFixed(2);
+
+    // for getting the month for the corresponding month number
     const monthName = new Date(0, Number(summaryByMonth)-1).toLocaleString("en-US", { month: "long" });
-    console.log(`Total Expenses for ${monthName}: ${reducedMonthlySummary}`);
+    console.log(`Total Expenses for ${monthName}: ₦${filteredMonthlySummary}`);
   } catch (error) {
     console.log("Error viewing summary by month:", error);
   }
 }
 
-// Implement this extra functions to the project to make it better
-function updateExpense() {
+function updateExpense(itemId, allExpenseData, expenseDataPath, description, category, amount) {
+  try {
+    if(!description && !category && !amount) {
+      throw new Error("At least one field (description, category, amount) must be provided for update.");
+    }
+    const newAllExpenseData = allExpenseData.map( data => {
+      if (data.id === Number(itemId)){
+        return {
+          ...data,
+          description: description? description : data.description,
+          category: category? category : data.category,
+          amount: amount? amount : data.amount,
+          dateUpdated: new Date().toLocaleString(),
+        }
+      }
+      return data;
+    })
+    writeFileSync(expenseDataPath, JSON.stringify(newAllExpenseData));
+    console.log(`Expense with ID ${itemId} has been updated.`);
+  } catch (error) {
+    console.error("Error updating expense:", error.message? error.message : error);
+  }
 }
 
 
-function setBudgetForMonth() {
-  console.log("set budget for month");
+function setBudgetForMonth(budgetForMonth, budgetPath) {
+  try {
+    const budgetData = {
+      budget: budgetForMonth,
+      dateSet: new Date().toLocaleString()
+    }
+    if(!budgetForMonth) {
+      throw new Error("Budget for the month must be provided.");
+    }
+    writeFileSync(budgetPath, JSON.stringify(budgetData));
+  } catch (error) {
+    console.error(
+      "Error setting budget for month:",
+      error.message ? error.message : error
+    );
+  }
 }
 
+// checks if budget per month is currently for this month if not it would request User to change budget as previous one has expired
+function checkBudgetPerMonth(budgetPath){
+  try {
+    let monthBudget = readFileSync(budgetPath, "utf-8");
+    monthBudget = JSON.parse(monthBudget)
+    const monthBudgetDate = new Date(monthBudget.dateSet);
+    const currentDate = new Date();
+    if(monthBudgetDate.getMonth() !== currentDate.getMonth()){
+      throw new Error ("Set new Monthly budget as Previous one has expired")
+    }
+  } catch (error) {
+    console.log("Error:", error.message? error.message : error);
+  }
+}
+
+// checks if the budget is exceeded
+// this function is not currently used in the code but soon
 function budgetExceeded() {
-  console.log("budget Exceeded");
+
 }
 
 // to give a new id to the task
@@ -166,4 +220,5 @@ module.exports = {
   viewSummaryByMonth,
   setBudgetForMonth,
   budgetExceeded,
+  checkBudgetPerMonth
 };
