@@ -1,1 +1,82 @@
-[{"id":1,"description":"Dinner","category":"fru","amount":"6","dateCreated":"7/18/2025, 3:21:49 PM","dateUpdated":"7/20/2025, 4:40:20 PM"},{"id":2,"description":"Supper","category":"fru","amount":"6","dateCreated":"7/19/2025, 2:24:40 PM","dateUpdated":"7/20/2025, 4:40:00 PM"}]
+[
+  {
+    "id": 1,
+    "description": "Grocery shopping",
+    "category": "Food",
+    "amount": 45.99,
+    "dateCreated": "7/1/2025, 10:00:00 AM",
+    "dateUpdated": "7/1/2025, 10:00:00 AM"
+  },
+  {
+    "id": 2,
+    "description": "Electric bill",
+    "category": "Utilities",
+    "amount": 120.5,
+    "dateCreated": "7/2/2025, 2:30:00 PM",
+    "dateUpdated": "7/2/2025, 2:30:00 PM"
+  },
+  {
+    "id": 3,
+    "description": "Movie tickets",
+    "category": "Entertainment",
+    "amount": 30.0,
+    "dateCreated": "7/3/2025, 6:45:00 PM",
+    "dateUpdated": "7/3/2025, 6:45:00 PM"
+  },
+  {
+    "id": 4,
+    "description": "Internet subscription",
+    "category": "Utilities",
+    "amount": 60.0,
+    "dateCreated": "7/5/2025, 9:15:00 AM",
+    "dateUpdated": "7/5/2025, 9:15:00 AM"
+  },
+  {
+    "id": 5,
+    "description": "Coffee with friends",
+    "category": "Food",
+    "amount": 12.75,
+    "dateCreated": "7/7/2025, 4:20:00 PM",
+    "dateUpdated": "7/7/2025, 4:20:00 PM"
+  },
+  {
+    "id": 6,
+    "description": "Gas refill",
+    "category": "Transportation",
+    "amount": 40.25,
+    "dateCreated": "7/10/2025, 8:00:00 AM",
+    "dateUpdated": "7/10/2025, 8:00:00 AM"
+  },
+  {
+    "id": 7,
+    "description": "Gym membership",
+    "category": "Health",
+    "amount": 50.0,
+    "dateCreated": "7/12/2025, 11:00:00 AM",
+    "dateUpdated": "7/12/2025, 11:00:00 AM"
+  },
+  {
+    "id": 8,
+    "description": "New shoes",
+    "category": "Clothing",
+    "amount": 80.0,
+    "dateCreated": "7/15/2025, 1:40:00 PM",
+    "dateUpdated": "7/15/2025, 1:40:00 PM"
+  },
+  {
+    "id": 9,
+    "description": "Phone bill",
+    "category": "Utilities",
+    "amount": 45.0,
+    "dateCreated": "7/18/2025, 9:30:00 AM",
+    "dateUpdated": "7/18/2025, 9:30:00 AM"
+  },
+  {
+    "id": 10,
+    "description": "Dinner out",
+    "category": "Food",
+    "amount": 65.3,
+    "dateCreated": "7/20/2025, 7:00:00 PM",
+    "dateUpdated": "7/20/2025, 7:00:00 PM"
+  }
+]

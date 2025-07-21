@@ -6,7 +6,10 @@ const { addExpense, getAllExpenses, listAllExpense, viewSummary, updateExpense, 
 // Always put space between the flag and the placeholder<>
 program
   .name("expenseTrackerCLI")
-  .argument("<action>", "add, list, summary, delete, setBudgetForMonth")
+  .argument(
+    "<action>",
+    "add, list, summary, delete, summaryByMonth, update, setBudgetForMonth"
+  )
   .option("-d, --description <descr>", "What you want to purchase")
   .option("-c, --category <cate>", "Group all your purchase under category")
   .option("-a,--amount <number>", "Price spent on the purchase")
@@ -67,3 +70,7 @@ switch(action){
 
 // call for budget checker
 checkBudgetPerMonth(budgetPath)
+
+// for checking if the budget is exceeded per month
+let budgetAmountForMonth = viewSummaryByMonth(7, allExpenseData);
+budgetExceeded(budgetAmountForMonth, budgetPath);

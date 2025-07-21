@@ -1,0 +1,6 @@
+# Ignore all files in the cache folder
+data/*
+# Except
+!cache/.gitkeep
+# Ignore Node Modules
+node_modules/

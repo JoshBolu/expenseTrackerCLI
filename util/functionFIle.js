@@ -1,4 +1,4 @@
-const { readFileSync, writeFileSync, existsSync } = require("fs");
+const { readFileSync, writeFileSync, existsSync, write } = require("fs");
 
 function addExpense(
   description,
@@ -129,6 +129,7 @@ function viewSummaryByMonth(summaryByMonth, allExpenseData) {
     // for getting the month for the corresponding month number
     const monthName = new Date(0, Number(summaryByMonth)-1).toLocaleString("en-US", { month: "long" });
     console.log(`Total Expenses for ${monthName}: ₦${filteredMonthlySummary}`);
+    return filteredMonthlySummary;
   } catch (error) {
     console.log("Error viewing summary by month:", error);
   }
@@ -185,6 +186,8 @@ function checkBudgetPerMonth(budgetPath){
     const monthBudgetDate = new Date(monthBudget.dateSet);
     const currentDate = new Date();
     if(monthBudgetDate.getMonth() !== currentDate.getMonth()){
+      // if the month is not the same as the current month then we would write a new budget
+      writeFileSync(budgetPath, JSON.stringify({ budget: "0", dateSet: new Date().toLocaleString() }));
       throw new Error ("Set new Monthly budget as Previous one has expired")
     }
   } catch (error) {
@@ -194,8 +197,32 @@ function checkBudgetPerMonth(budgetPath){
 
 // checks if the budget is exceeded
 // this function is not currently used in the code but soon
-function budgetExceeded() {
+function budgetExceeded(budgetAmount, budgetPath) {
+  try {
+    let budget = readFileSync(budgetPath, "utf-8");
+    budget = JSON.parse(budget);
+    budget = Number(budget.budget);
+    if (budgetAmount > budget) {
+      console.log(
+        `Budget exceeded! You have spent ₦${budgetAmount} which is more than your budget of ₦${budget}.`
+      );
+    }else if( budgetAmount < budget && budgetAmount > budget - budget * 0.1){
+      console.log(
+        `You are close to your budget of ₦${budget}.\nSpend Wisely!`
+      );
+    }
+     else {
+      console.log(
+        `You are within your budget. You have spent ₦${budgetAmount} out of ₦${budget}.`
+      );
+    }
 
+  } catch (error) {
+    console.error(
+      "Error checking if budget is exceeded:",
+      error.message ? error.message : error
+    );
+  }
 }
 
 // to give a new id to the task
